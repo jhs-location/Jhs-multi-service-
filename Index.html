@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ht">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Jerem — Kontabilite</title>
+<style>
+:root{--bg:#f7f8fa;--surface:#fff;--ink:#182230;--muted:#667085;--line:#e4e7ec;--nav:#18212f;--nav2:#202b3b;--blue:#2f6fed;--blue2:#2458c6;--green:#16a36a;--red:#d64545;--amber:#d98b19;--shadow:0 2px 12px rgba(16,24,40,.06)}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}
+.app{display:flex;min-height:100vh}.side{width:246px;background:var(--nav);color:#fff;position:fixed;inset:0 auto 0 0;padding:18px 12px;box-shadow:2px 0 12px #10182822;z-index:4}
+.brand{font-size:24px;font-weight:800;padding:10px 13px 23px;letter-spacing:-.6px}.brand:before{content:"J";display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;background:var(--blue);margin-right:9px;font-size:19px}.brand small{display:block;color:#aeb8c7;font-size:10px;font-weight:500;margin:7px 0 0 44px;letter-spacing:.2px}
+.nav-label{color:#8490a1;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.9px;padding:12px 13px 5px}
+.nav button{display:flex;align-items:center;gap:10px;width:100%;border:0;background:transparent;color:#c8d0dc;text-align:left;padding:10px 13px;border-radius:7px;margin:2px 0;font-size:13px;cursor:pointer}.nav button.active{background:#2d394a;color:#fff;box-shadow:inset 3px 0 0 var(--blue)}.nav button:hover{background:#273344;color:#fff}
+.main{margin-left:246px;width:calc(100% - 246px);padding:26px 30px;max-width:1500px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.top h1{margin:0;font-size:25px;font-weight:750;letter-spacing:-.4px}.sub{color:var(--muted);margin-top:5px;font-size:12px}
+.btn{border:1px solid var(--blue);background:var(--blue);color:#fff;padding:9px 14px;border-radius:6px;font-weight:700;font-size:13px;cursor:pointer;transition:.15s}.btn:hover{background:var(--blue2)}.btn.secondary{background:#fff;color:#344054;border-color:#d0d5dd;box-shadow:none}.btn.danger{background:#fff;color:#b42318;border-color:#f0b6b1;box-shadow:none}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:17px 18px;box-shadow:var(--shadow)}.label{font-size:11px;color:var(--muted);font-weight:650}.value{font-size:24px;font-weight:800;margin-top:8px;letter-spacing:-.4px}.green{color:var(--green)}.red{color:var(--red)}
+.quick{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 17px}.quick .btn{background:#fff;color:#344054;border-color:#d0d5dd}.quick .btn:first-child{background:var(--blue);color:#fff;border-color:var(--blue)}
+.dashboard-grid{display:grid;grid-template-columns:1.55fr 1fr;gap:14px}
+.section{display:none}.section.active{display:block}.panel{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}.panel h2{font-size:15px;margin:0 0 15px;font-weight:750}
+.toolbar{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-bottom:14px}.toolbar input,.toolbar select,.form input,.form select,.form textarea{border:1px solid #d0d5dd;border-radius:6px;padding:9px 10px;font:inherit;background:#fff;outline:none}.toolbar input:focus,.toolbar select:focus,.form input:focus,.form select:focus{border-color:#84aef8;box-shadow:0 0 0 3px #2f6fed18}.toolbar input{max-width:300px;width:100%}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px 9px;border-bottom:1px solid #eef0f3;font-size:12px}th{color:#667085;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.5px}tbody tr:hover{background:#fafbfc}.pill{display:inline-block;padding:4px 8px;border-radius:12px;font-size:10px;font-weight:800}.pill.income{background:#e6f7ef;color:#087443}.pill.expense{background:#fdecec;color:#b42318}.pill.paid{background:#eaf1ff;color:#2458c6}.empty{text-align:center;color:var(--muted);padding:32px}
+.mini-list{display:flex;flex-direction:column;gap:10px}.mini-row{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #eef0f3;padding-bottom:10px}.mini-row:last-child{border-bottom:0}.dot{width:9px;height:9px;border-radius:50%;background:var(--blue);display:inline-block;margin-right:8px}.mini-label{font-size:12px}.mini-value{font-weight:750;font-size:12px}
+.bar{height:9px;background:#eef1f5;border-radius:10px;overflow:hidden;margin-top:7px}.bar i{display:block;height:100%;background:var(--blue);border-radius:10px}.reportgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.modal{position:fixed;inset:0;background:#10182899;backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;padding:20px;z-index:10}.modal.show{display:flex}.modalbox{background:#fff;width:min(560px,100%);border-radius:10px;padding:22px;box-shadow:0 20px 60px #10182833}.form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form .full{grid-column:1/-1}.form label{font-size:11px;color:#475467;font-weight:650;display:flex;flex-direction:column;gap:6px}.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:17px}.invoice{border:1px solid var(--line);border-radius:8px;padding:15px;margin-bottom:9px;background:#fff}.invoice strong{font-size:14px}
+@media(max-width:1000px){.cards{grid-template-columns:repeat(2,1fr)}.dashboard-grid{grid-template-columns:1fr}}
+@media(max-width:700px){.side{position:static;width:100%;height:auto;padding:12px}.app{display:block}.brand{padding:3px 8px 14px}.brand small{margin-left:0}.nav-label{display:none}.nav{display:grid;grid-template-columns:repeat(5,1fr);gap:3px}.nav button{font-size:10px;text-align:center;justify-content:center;padding:9px 2px;margin:0}.main{margin-left:0;width:100%;padding:17px}.cards{grid-template-columns:1fr 1fr}.top{align-items:flex-start;gap:10px;flex-direction:column}.panel.tablewrap{overflow:auto}table{min-width:620px}}
+@media(max-width:430px){.cards{grid-template-columns:1fr}.nav{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side">
+  <div class="brand">Jerem<small>Kontabilite pou biznis ou</small></div>
+  <div class="nav">
+    <button class="active" data-tab="dashboard">🏠 Dashboard</button>
+    <button data-tab="transactions">💳 Tranzaksyon</button>
+    <button data-tab="invoices">🧾 Fakti</button>
+    <button data-tab="reports">📈 Rapò</button>
+    <button data-tab="settings">⚙️ Paramèt</button>
+  </div>
+</aside>
+<main class="main">
+  <section id="dashboard" class="section active">
+    <div class="top"><div><h1>Overview</h1><div class="sub" id="businessSub">Rezime finans biznis la</div></div><button class="btn" onclick="openTransaction()">+ Nouvo tranzaksyon</button></div>
+    <div class="quick">
+<button class="btn" onclick="openTransaction()">＋ Transaction</button>
+<button class="btn" onclick="openInvoice()">＋ Invoice</button>
+<button class="btn" onclick="document.querySelector('[data-tab="reports"]').click()">View reports</button>
+</div>
+<div class="cards">
+      <div class="card"><div class="label">Revni total</div><div class="value green" id="incomeTotal">$0.00</div></div>
+      <div class="card"><div class="label">Depans total</div><div class="value red" id="expenseTotal">$0.00</div></div>
+      <div class="card"><div class="label">Pwofi net</div><div class="value" id="profitTotal">$0.00</div></div>
+      <div class="card"><div class="label">Fakti ki poko peye</div><div class="value" id="unpaidTotal">$0.00</div></div>
+    </div>
+    <div class="dashboard-grid">
+<div class="panel tablewrap"><h2>Dènye tranzaksyon</h2><table><thead><tr><th>Dat</th><th>Deskripsyon</th><th>Kategori</th><th>Tip</th><th>Montan</th></tr></thead><tbody id="recent"></tbody></table></div>
+<div class="panel"><h2>Financial snapshot</h2>
+<div class="mini-list">
+<div class="mini-row"><span class="mini-label"><span class="dot"></span>Revenue</span><span class="mini-value green" id="snapIncome">$0</span></div>
+<div class="mini-row"><span class="mini-label"><span class="dot" style="background:#d64545"></span>Expenses</span><span class="mini-value red" id="snapExpense">$0</span></div>
+<div class="mini-row"><span class="mini-label"><span class="dot" style="background:#d98b19"></span>Net profit</span><span class="mini-value" id="snapProfit">$0</span></div>
+</div></div></div>
+  </section>
+
+  <section id="transactions" class="section">
+    <div class="top"><div><h1>Tranzaksyon</h1><div class="sub">Jere tout revni ak depans yo.</div></div><button class="btn" onclick="openTransaction()">+ Ajoute</button></div>
+    <div class="panel tablewrap"><div class="toolbar"><input id="searchTx" placeholder="Chèche tranzaksyon..." oninput="renderTransactions()"><select id="filterTx" onchange="renderTransactions()"><option value="all">Tout</option><option value="income">Revni</option><option value="expense">Depans</option></select></div>
+    <table><thead><tr><th>Dat</th><th>Deskripsyon</th><th>Kategori</th><th>Tip</th><th>Montan</th><th></th></tr></thead><tbody id="txTable"></tbody></table></div>
+  </section>
+
+  <section id="invoices" class="section">
+    <div class="top"><div><h1>Fakti</h1><div class="sub">Kreye epi swiv fakti kliyan yo.</div></div><button class="btn" onclick="openInvoice()">+ Nouvo fakti</button></div>
+    <div class="panel"><div id="invoiceList"></div></div>
+  </section>
+
+  <section id="reports" class="section">
+    <div class="top"><div><h1>Rapò</h1><div class="sub">Yon rezime rapid sou pèfòmans finansye a.</div></div></div>
+    <div class="reportgrid">
+      <div class="panel"><h2>Revni vs Depans</h2><div>Revni <strong id="rIncome">$0</strong><div class="bar"><i id="incomeBar" style="width:0%"></i></div></div><br><div>Depans <strong id="rExpense">$0</strong><div class="bar"><i id="expenseBar" style="width:0%"></i></div></div></div>
+      <div class="panel"><h2>Pwofi net</h2><div class="value" id="rProfit">$0</div><p class="sub">Revni minus depans.</p></div>
+    </div>
+    <div class="panel"><h2>Rezime pa kategori</h2><table><thead><tr><th>Kategori</th><th>Revni</th><th>Depans</th></tr></thead><tbody id="categoryReport"></tbody></table></div>
+  </section>
+
+  <section id="settings" class="section">
+    <div class="top"><div><h1>Paramèt</h1><div class="sub">Enfòmasyon sou biznis la.</div></div></div>
+    <div class="panel">
+      <h2>Biznis</h2>
+      <div class="form">
+        <label>Non biznis <input id="bizName"></label>
+        <label>Deviz <select id="currency"><option value="USD">USD ($)</option><option value="HTG">HTG (G)</option><option value="EUR">EUR (€)</option></select></label>
+      </div>
+      <div class="actions"><button class="btn" onclick="saveSettings()">Sove paramèt</button></div>
+    </div>
+    <div class="panel"><h2>Sekirite done</h2><p class="sub">Jerem vèsyon sa a sere done yo nan navigatè aparèy la. Fè backup regilyèman si done yo enpòtan.</p><button class="btn secondary" onclick="exportData()">Ekspòte backup JSON</button></div>
+  </section>
+</main>
+</div>
+
+<div class="modal" id="txModal"><div class="modalbox">
+<h2 id="txTitle">Nouvo tranzaksyon</h2>
+<form class="form" onsubmit="saveTransaction(event)">
+<input type="hidden" id="txId">
+<label>Dat<input type="date" id="txDate" required></label>
+<label>Tip<select id="txType"><option value="income">Revni</option><option value="expense">Depans</option></select></label>
+<label class="full">Deskripsyon<input id="txDesc" required placeholder="Eg. Vant pwodwi"></label>
+<label>Kategori<input id="txCat" required placeholder="Eg. Vant, Lwaye, Materyèl"></label>
+<label>Montan<input id="txAmount" type="number" min="0" step="0.01" required></label>
+<div class="actions full"><button type="button" class="btn secondary" onclick="closeModal('txModal')">Anile</button><button class="btn">Sove</button></div>
+</form></div></div>
+
+<div class="modal" id="invoiceModal"><div class="modalbox">
+<h2>Nouvo fakti</h2>
+<form class="form" onsubmit="saveInvoice(event)">
+<label>Nimewo<input id="invNo" required></label><label>Dat<input type="date" id="invDate" required></label>
+<label class="full">Kliyan<input id="invClient" required></label>
+<label>Deskripsyon<input id="invDesc" required></label><label>Montan<input id="invAmount" type="number" min="0" step="0.01" required></label>
+<div class="actions full"><button type="button" class="btn secondary" onclick="closeModal('invoiceModal')">Anile</button><button class="btn">Kreye fakti</button></div>
+</form></div></div>
+
+<script>
+const KEY='jerem_accounting_v1';
+let db=JSON.parse(localStorage.getItem(KEY)||'null')||{settings:{name:'Jerem',currency:'USD'},transactions:[],invoices:[]};
+const $=id=>document.getElementById(id);
+function save(){localStorage.setItem(KEY,JSON.stringify(db));renderAll()}
+function money(n){let c=db.settings.currency||'USD';let sym=c==='HTG'?'G':c==='EUR'?'€':'$';return sym+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function today(){return new Date().toISOString().slice(0,10)}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));$(b.dataset.tab).classList.add('active');renderAll()});
+function totals(){let inc=db.transactions.filter(t=>t.type==='income').reduce((a,t)=>a+ +t.amount,0),exp=db.transactions.filter(t=>t.type==='expense').reduce((a,t)=>a+ +t.amount,0),un=db.invoices.filter(i=>!i.paid).reduce((a,i)=>a+ +i.amount,0);return{inc,exp,profit:inc-exp,un}}
+function renderAll(){let t=totals();$('incomeTotal').textContent=money(t.inc);$('expenseTotal').textContent=money(t.exp);$('profitTotal').textContent=money(t.profit);$('unpaidTotal').textContent=money(t.un);$('snapIncome').textContent=money(t.inc);$('snapExpense').textContent=money(t.exp);$('snapProfit').textContent=money(t.profit);$('businessSub').textContent=(db.settings.name||'Jerem')+' · Kontabilite';$('rIncome').textContent=money(t.inc);$('rExpense').textContent=money(t.exp);$('rProfit').textContent=money(t.profit);let mx=Math.max(t.inc,t.exp,1);$('incomeBar').style.width=(t.inc/mx*100)+'%';$('expenseBar').style.width=(t.exp/mx*100)+'%';renderRecent();renderTransactions();renderInvoices();renderCategories();$('bizName').value=db.settings.name||'';$('currency').value=db.settings.currency||'USD'}
+function renderRecent(){let a=[...db.transactions].sort((x,y)=>y.date.localeCompare(x.date)).slice(0,6);$('recent').innerHTML=a.length?a.map(t=>`<tr><td>${t.date}</td><td>${esc(t.desc)}</td><td>${esc(t.cat)}</td><td><span class="pill ${t.type}">${t.type==='income'?'Revni':'Depans'}</span></td><td>${money(t.amount)}</td></tr>`).join(''):`<tr><td colspan="5" class="empty">Pa gen tranzaksyon ankò.</td></tr>`}
+function renderTransactions(){let q=($('searchTx')?.value||'').toLowerCase(),f=$('filterTx')?.value||'all';let a=db.transactions.filter(t=>(f==='all'||t.type===f)&&(`${t.desc} ${t.cat}`.toLowerCase().includes(q))).sort((x,y)=>y.date.localeCompare(x.date));$('txTable').innerHTML=a.length?a.map(t=>`<tr><td>${t.date}</td><td>${esc(t.desc)}</td><td>${esc(t.cat)}</td><td><span class="pill ${t.type}">${t.type==='income'?'Revni':'Depans'}</span></td><td>${money(t.amount)}</td><td><button class="btn danger" onclick="delTx('${t.id}')">Efase</button></td></tr>`).join(''):`<tr><td colspan="6" class="empty">Pa gen rezilta.</td></tr>`}
+function renderInvoices(){let a=[...db.invoices].sort((x,y)=>y.date.localeCompare(x.date));$('invoiceList').innerHTML=a.length?a.map(i=>`<div class="invoice"><div style="display:flex;justify-content:space-between;gap:10px"><div><strong>${esc(i.no)}</strong> · ${esc(i.client)}<div class="sub">${i.date} · ${esc(i.desc)}</div></div><div><strong>${money(i.amount)}</strong><br><span class="pill ${i.paid?'paid':'expense'}">${i.paid?'Peye':'Pa peye'}</span></div></div><div class="actions"><button class="btn secondary" onclick="togglePaid('${i.id}')">${i.paid?'Make pa peye':'Make peye'}</button><button class="btn danger" onclick="delInvoice('${i.id}')">Efase</button></div></div>`).join(''):`<div class="empty">Pa gen fakti ankò.</div>`}
+function renderCategories(){let m={};db.transactions.forEach(t=>{m[t.cat]??={i:0,e:0};m[t.cat][t.type==='income'?'i':'e']+=+t.amount});let a=Object.entries(m).sort((x,y)=>(y[1].i+y[1].e)-(x[1].i+x[1].e));$('categoryReport').innerHTML=a.length?a.map(([k,v])=>`<tr><td>${esc(k)}</td><td>${money(v.i)}</td><td>${money(v.e)}</td></tr>`).join(''):`<tr><td colspan="3" class="empty">Pa gen done.</td></tr>`}
+function openTransaction(){ $('txId').value='';$('txTitle').textContent='Nouvo tranzaksyon';$('txDate').value=today();$('txType').value='income';$('txDesc').value='';$('txCat').value='';$('txAmount').value='';$('txModal').classList.add('show')}
+function saveTransaction(e){e.preventDefault();let id=$('txId').value||crypto.randomUUID();db.transactions.push({id,date:$('txDate').value,type:$('txType').value,desc:$('txDesc').value,cat:$('txCat').value,amount:+$('txAmount').value});closeModal('txModal');save()}
+function delTx(id){if(confirm('Efase tranzaksyon sa a?')){db.transactions=db.transactions.filter(t=>t.id!==id);save()}}
+function openInvoice(){$('invNo').value='F-'+String(db.invoices.length+1).padStart(4,'0');$('invDate').value=today();$('invClient').value='';$('invDesc').value='';$('invAmount').value='';$('invoiceModal').classList.add('show')}
+function saveInvoice(e){e.preventDefault();db.invoices.push({id:crypto.randomUUID(),no:$('invNo').value,date:$('invDate').value,client:$('invClient').value,desc:$('invDesc').value,amount:+$('invAmount').value,paid:false});closeModal('invoiceModal');save()}
+function togglePaid(id){let i=db.invoices.find(x=>x.id===id);i.paid=!i.paid;save()}
+function delInvoice(id){if(confirm('Efase fakti sa a?')){db.invoices=db.invoices.filter(i=>i.id!==id);save()}}
+function closeModal(id){$(id).classList.remove('show')}
+function saveSettings(){db.settings.name=$('bizName').value.trim()||'Jerem';db.settings.currency=$('currency').value;save();alert('Paramèt yo sove.')}
+function exportData(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='jerem-backup.json';a.click();URL.revokeObjectURL(a.href)}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+renderAll();
+</script>
+</body></html>
